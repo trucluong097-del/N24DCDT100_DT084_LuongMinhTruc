@@ -96,7 +96,7 @@ Kỳ vọng: `cac_muc=[[8]]`, rộng nhất `1`, mức `0`. Cây rỗng chỉ nh
 | `Giao_dien_truc_quan.html` | Mô phỏng JavaScript độc lập trong trình duyệt |
 | `test/gui_tests.cjs` | Kiểm tra logic HTML bằng Node, tùy chọn |
 | `docs/logs/` | Nhật ký chạy thật |
-| `docs/anh_ket_qua/` | Nơi lưu ảnh A01–A11 sau khi tự chụp |
+| `docs/anh_ket_qua/` | 11 ảnh A01–A11 đã chụp và danh mục phân tích |
 
 Chọn `demo.jl --ca=k`:
 
@@ -152,7 +152,7 @@ node test/gui_tests.cjs
 
 Repo GitHub thật: https://github.com/trucluong097-del/N24DCDT100_DT084_LuongMinhTruc
 
-Bản này dùng Julia; README, mã, test và log được đóng gói cùng nhau. Chưa có 11 ảnh cá nhân và báo cáo trong repo này. SHA C lấy từ commit chứa mã/test/input, SHA S chốt sau khi bổ sung minh chứng. Sau khi tự chạy lại:
+Bản này dùng Julia; README, mã, test và log được đóng gói cùng nhau. Đã bổ sung đủ 11 ảnh cá nhân A01–A11 trong docs/anh_ket_qua. Báo cáo Word/PDF chưa có trong repo này. SHA C lấy từ commit chứa mã/test/input, SHA S chốt sau khi bổ sung minh chứng. Sau khi tự chạy lại:
 
 1. Đưa mã/test/input lên repo cá nhân, chốt **C**; ghi URL, SHA C và permalink thuật toán/test trong báo cáo.
 2. Clone đúng C vào thư mục mới, kiểm HEAD và chạy lại để chụp A10. Tự chụp A01–A09 và A11 theo hướng dẫn lớp.
@@ -160,7 +160,7 @@ Bản này dùng Julia; README, mã, test và log được đóng gói cùng nha
 4. Ghi SHA S và kết quả chạy lại trong TXT nộp rời; không đưa SHA của chính S vào tệp thuộc S.
 5. ZIP mã giữ code/test/README/log/ảnh gốc; bỏ .git, cache, tệp tạm. Bộ nộp còn cần Word, PDF và TXT.
 
-Nhật ký chạy không thay 11 ảnh cá nhân. Ghi log mới bằng:
+11 ảnh cá nhân đã lưu trong docs/anh_ket_qua; nhật ký là bằng chứng bổ sung. Ghi log mới bằng:
 
 ```powershell
 .\Run_all.ps1 | Tee-Object -FilePath docs/logs/chay_lai.log
@@ -175,3 +175,10 @@ cd N24DCDT100_DT084_LuongMinhTruc
 git rev-parse HEAD
 .\Run_all.ps1
 ```
+
+
+## 8. Phiên bản mã tạo kết quả và bộ ảnh
+
+SHA C: `ccaf13ab5c6bca2a9affc669f42508e7d0f6848a`.
+
+Mã/test/input không đổi so với C; lần cập nhật này thêm 11 ảnh, danh mục phân tích và nhật ký clone C. Xem docs/anh_ket_qua/README.md. Nhật ký clone_C.log và clone_C_gui.log ghi kết quả chạy lại thật từ repo mới. SHA S lấy sau khi chốt phiên bản trên GitHub và ghi vào TXT nộp rời.

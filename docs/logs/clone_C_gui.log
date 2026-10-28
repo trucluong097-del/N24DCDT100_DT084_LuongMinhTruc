@@ -1,0 +1,25 @@
+GUI01 PASS two assignment examples
+GUI02 PASS empty tree text is accepted
+GUI03 PASS JSON gia_tri alias and shuffled IDs
+GUI04 PASS quoted strings with commas, spaces and quotes round trip
+GUI05 PASS reject cycle instead of recursing
+GUI06 PASS reject disconnected cycle
+GUI07 PASS reject duplicate IDs
+GUI08 PASS reject child referenced by two parents
+GUI09 PASS reject repeated left/right child
+GUI10 PASS reject out of range and fractional references
+GUI11 PASS reject root type and range errors
+GUI12 PASS 100 nodes allowed and 101 rejected
+GUI13 PASS reject nonfinite and non scalar values
+GUI14 PASS reject malformed tuples and trailing garbage
+GUI15 PASS parse valid signed integers and finite decimal values
+GUI16 PASS invalid load preserves tree and traversal state
+GUI17 PASS reject occupied child insertion without losing old branch
+GUI18 PASS insert into empty child keeps all nodes reachable
+GUI19 PASS reset restarts the custom tree
+GUI20 PASS node 101 insertion is rejected
+GUI21 PASS strings render as text and have no numeric average
+GUI22 PASS FIFO cursor and queue maximum on full and chain trees
+GUI23 PASS tie chooses first level
+GUI24 PASS empty tree can load via UI then create a root
+GUI TEST SUMMARY: 24/24 independent cases PASS (DOM model; browser layout not tested).

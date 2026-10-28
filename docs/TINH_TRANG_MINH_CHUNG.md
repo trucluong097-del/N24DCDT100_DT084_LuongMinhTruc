@@ -11,9 +11,12 @@ Sinh viên Lương Minh Trực — N24DCDT100.
 - Bảng input/expected/actual/PASS, truy vết và khảo sát n=3,7,31.
 - README, .gitignore và nhật ký chạy thật trong docs/logs.
 
-## Cần bổ sung bằng kết quả thực tế
+- Đã có đủ 11 ảnh cá nhân A01–A11 và danh mục phân tích.
+- Nhật ký chạy lại từ clone C: docs/logs/clone_C.log và clone_C_gui.log.
 
-- 11 ảnh cá nhân A01–A11 trong docs/anh_ket_qua và báo cáo.
+## Cần bổ sung trước khi nộp
+
+- Chèn 11 ảnh đã có trong docs/anh_ket_qua vào báo cáo kèm phân tích.
 - Báo cáo Word/PDF theo mẫu môn học, có phiếu giao DT084 nguyên bản.
 - Thông tin nộp TXT chứa URL, SHA C/S và permalink; nộp TXT rời trên Classroom.
 
