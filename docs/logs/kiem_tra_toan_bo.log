@@ -1,0 +1,334 @@
+=== KIEM TRA PHIEN BAN JULIA ===
+julia version 1.12.6
+=== CHAY CAC DEMO A01 DEN A08 ===
+
+>>> DEMO 1 <<<
+Precompiling packages...
+   1059.3 ms  ✓ Printf (serial)
+  1 dependency successfully precompiled in 1 seconds
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A01_ViDu1_PhieuGiao
+Input: goc=1; n=4
+Danh sach nut: [(1, 10, 2, 3), (2, 20, 4, 0), (3, 30, 0, 0), (4, 40, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1 -> 2 -> 3 -> 4
+  - Thu tu gia tri  : 10 -> 20 -> 30 -> 40
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[10]
+  * Muc  1 (do rong  2): Any[20, 30]
+  * Muc  2 (do rong  1): Any[40]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1, 2, 1]
+  - Do rong lon nhat : 2
+  - Muc dau tien dat : 1
+  - Trung binh muc   : Union{Nothing, Float64}[10.0, 25.0, 40.0]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 4
+  - So luot nut ra queue  : 4
+  - Dung luong queue toi da: 2
+================================================================================
+
+
+>>> DEMO 2 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A02_ViDu2_PhieuGiao
+Input: goc=1; n=1
+Danh sach nut: [(1, 8, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1
+  - Thu tu gia tri  : 8
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[8]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1]
+  - Do rong lon nhat : 1
+  - Muc dau tien dat : 0
+  - Trung binh muc   : Union{Nothing, Float64}[8.0]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 1
+  - So luot nut ra queue  : 1
+  - Dung luong queue toi da: 1
+================================================================================
+
+
+>>> DEMO 3 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A03_CayDay7Nut
+Input: goc=1; n=7
+Danh sach nut: [(1, 1, 2, 3), (2, 2, 4, 5), (3, 3, 6, 7), (4, 4, 0, 0), (5, 5, 0, 0), (6, 6, 0, 0), (7, 7, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+  - Thu tu gia tri  : 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[1]
+  * Muc  1 (do rong  2): Any[2, 3]
+  * Muc  2 (do rong  4): Any[4, 5, 6, 7]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1, 2, 4]
+  - Do rong lon nhat : 4
+  - Muc dau tien dat : 2
+  - Trung binh muc   : Union{Nothing, Float64}[1.0, 2.5, 5.5]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 7
+  - So luot nut ra queue  : 7
+  - Dung luong queue toi da: 4
+================================================================================
+
+
+>>> DEMO 4 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A04_HoaDoRong_ChonMucNhoNhat
+Input: goc=1; n=5
+Danh sach nut: [(1, 10, 2, 3), (2, 20, 4, 0), (3, 30, 0, 5), (4, 40, 0, 0), (5, 50, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1 -> 2 -> 3 -> 4 -> 5
+  - Thu tu gia tri  : 10 -> 20 -> 30 -> 40 -> 50
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[10]
+  * Muc  1 (do rong  2): Any[20, 30]
+  * Muc  2 (do rong  2): Any[40, 50]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1, 2, 2]
+  - Do rong lon nhat : 2
+  - Muc dau tien dat : 1
+  - Trung binh muc   : Union{Nothing, Float64}[10.0, 25.0, 45.0]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 5
+  - So luot nut ra queue  : 5
+  - Dung luong queue toi da: 2
+================================================================================
+
+
+>>> DEMO 5 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A05_CayRong
+Input: goc=0; n=0
+Danh sach nut: Tuple{Int64, Any, Int64, Int64}[]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 
+  - Thu tu gia tri  : 
+
+Phan nhom theo tung muc (cac_muc):
+  (Cay rong: khong co muc nao de in)
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : Int64[]
+  - Do rong lon nhat : 0
+  - Muc dau tien dat : Khong ton tai (cay rong)
+  - Trung binh muc   : Float64[]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 0
+  - So luot nut ra queue  : 0
+  - Dung luong queue toi da: 0
+================================================================================
+
+
+>>> DEMO 6 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A06_DayPhai4Nut
+Input: goc=1; n=4
+Danh sach nut: [(1, 10, 0, 2), (2, 20, 0, 3), (3, 30, 0, 4), (4, 40, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1 -> 2 -> 3 -> 4
+  - Thu tu gia tri  : 10 -> 20 -> 30 -> 40
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[10]
+  * Muc  1 (do rong  1): Any[20]
+  * Muc  2 (do rong  1): Any[30]
+  * Muc  3 (do rong  1): Any[40]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1, 1, 1, 1]
+  - Do rong lon nhat : 1
+  - Muc dau tien dat : 0
+  - Trung binh muc   : Union{Nothing, Float64}[10.0, 20.0, 30.0, 40.0]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 4
+  - So luot nut ra queue  : 4
+  - Dung luong queue toi da: 1
+================================================================================
+
+
+>>> DEMO 7 <<<
+================================================================================
+DT084 - DUYET CAY THEO MUC VA XAC DINH DO RONG TUNG MUC
+Ca: A07_GocHaiLa
+Input: goc=1; n=3
+Danh sach nut: [(1, 100, 2, 3), (2, 200, 0, 0), (3, 300, 0, 0)]
+--------------------------------------------------------------------------------
+Duyet theo thu tu hang doi FIFO:
+  - Thu tu ID nut   : 1 -> 2 -> 3
+  - Thu tu gia tri  : 100 -> 200 -> 300
+
+Phan nhom theo tung muc (cac_muc):
+  * Muc  0 (do rong  1): Any[100]
+  * Muc  1 (do rong  2): Any[200, 300]
+
+Thong ke do rong va muc rong nhat:
+  - Do rong tung muc : [1, 2]
+  - Do rong lon nhat : 2
+  - Muc dau tien dat : 1
+  - Trung binh muc   : Union{Nothing, Float64}[100.0, 250.0]
+
+Thong so van hanh hang doi (Kiem chung chi phi):
+  - So luot nut vao queue : 3
+  - So luot nut ra queue  : 3
+  - Dung luong queue toi da: 2
+================================================================================
+
+
+>>> DEMO 8 <<<
+================================================================================
+DT084 - MINH HOA TU CHOI DU LIEU KHONG HOP LE (CA LOI A08)
+Input loi: nut con tro tao chu trinh (1 -> con 2; 2 -> con 1)
+goc = 1; nut = [(1, 10, 2, 0), (2, 20, 1, 0)]
+Mong doi: Tu choi cay co chu trinh (goc bi tro nguoc, co cha).
+--------------------------------------------------------------------------------
+DA TU CHOI DU LIEU THANH CONG!
+Thong bao loi: ArgumentError: Nut goc goc=1 khong duoc co nut cha (bac vao phai bang 0)
+KET QUA MINH HOA A08: PASS - input khong hop le da bi tu choi.
+================================================================================
+
+=== CHAY BO KIEM THU THUAT TOAN ===
+Precompiling packages...
+  22992.6 ms  ✓ Test (serial)
+  1 dependency successfully precompiled in 23 seconds
+Test Summary:                             | Pass  Total  Time
+DT084 - Cac ca chuc nang va hoi quy co ID |  121    121  2.6s
+=== CHAY KIEM THU NHAP DU LIEU ===
+Test Summary:                | Pass  Total  Time
+Nhap du lieu - 16 ca doc lap |   18     18  1.4s
+=== BANG INPUT / EXPECTED / ACTUAL / PASS ===
+DT084 - BANG DOI CHIEU 12 CA DA CO TRONG BO TEST T01..T38
+
+T01 | goc=1 | nut=[(1, 10, 2, 3), (2, 20, 4, 0), (3, 30, 0, 0), (4, 40, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[10], [20, 30], [40]], do_rong = [1, 2, 1], rong_nhat = 2, muc = 1)
+Actual: (cac_muc = Vector{Any}[[10], [20, 30], [40]], do_rong = [1, 2, 1], rong_nhat = 2, muc = 1)
+Ket qua: PASS
+
+T02 | goc=1 | nut=[(1, 8, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[8]], do_rong = [1], rong_nhat = 1, muc = 0)
+Actual: (cac_muc = Vector{Any}[[8]], do_rong = [1], rong_nhat = 1, muc = 0)
+Ket qua: PASS
+
+T03 | goc=0 | nut=Any[]
+Expected (viet truoc tu so do cay): (cac_muc = Any[], do_rong = Any[], rong_nhat = 0, muc = nothing)
+Actual: (cac_muc = Vector{Any}[], do_rong = Int64[], rong_nhat = 0, muc = nothing)
+Ket qua: PASS
+
+T04 | goc=1 | nut=[(1, 100, 2, 3), (2, 200, 0, 0), (3, 300, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[100], [200, 300]], do_rong = [1, 2], rong_nhat = 2, muc = 1)
+Actual: (cac_muc = Vector{Any}[[100], [200, 300]], do_rong = [1, 2], rong_nhat = 2, muc = 1)
+Ket qua: PASS
+
+T05 | goc=1 | nut=[(1, 10, 0, 2), (2, 20, 0, 3), (3, 30, 0, 4), (4, 40, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[10], [20], [30], [40]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Actual: (cac_muc = Vector{Any}[[10], [20], [30], [40]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Ket qua: PASS
+
+T06 | goc=1 | nut=[(1, 1, 2, 3), (2, 2, 4, 5), (3, 3, 6, 7), (4, 4, 0, 0), (5, 5, 0, 0), (6, 6, 0, 0), (7, 7, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[1], [2, 3], [4, 5, 6, 7]], do_rong = [1, 2, 4], rong_nhat = 4, muc = 2)
+Actual: (cac_muc = Vector{Any}[[1], [2, 3], [4, 5, 6, 7]], do_rong = [1, 2, 4], rong_nhat = 4, muc = 2)
+Ket qua: PASS
+
+T07 | goc=1 | nut=[(1, "A", 2, 0), (2, "B", 3, 0), (3, "C", 4, 0), (4, "D", 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [["A"], ["B"], ["C"], ["D"]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Actual: (cac_muc = Vector{Any}[["A"], ["B"], ["C"], ["D"]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Ket qua: PASS
+
+T08 | goc=1 | nut=[(1, 10, 2, 0), (2, 20, 0, 3), (3, 30, 4, 0), (4, 40, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[10], [20], [30], [40]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Actual: (cac_muc = Vector{Any}[[10], [20], [30], [40]], do_rong = [1, 1, 1, 1], rong_nhat = 1, muc = 0)
+Ket qua: PASS
+
+T09 | goc=1 | nut=[(1, 1, 2, 3), (2, 2, 4, 0), (3, 3, 0, 5), (4, 4, 6, 0), (5, 5, 0, 7), (6, 6, 0, 0), (7, 7, 0, 0)]
+Expected (viet truoc tu so do cay): (cac_muc = [[1], [2, 3], [4, 5], [6, 7]], do_rong = [1, 2, 2, 2], rong_nhat = 2, muc = 1)
+Actual: (cac_muc = Vector{Any}[[1], [2, 3], [4, 5], [6, 7]], do_rong = [1, 2, 2, 2], rong_nhat = 2, muc = 1)
+Ket qua: PASS
+
+T10 | goc=1 | nut=[(1, 1, 2, 3), (2, 2, 4, 5), (3, 3, 6, 7), (4, 4, 8, 9), (5, 5, 10, 11), (6, 6, 12, 13), (7, 7, 14, 15), (8, 8, 0, 0), (9, 9, 0, 0), (10, 10, 0, 0), (11, 11, 0, 0), (12, 12, 0, 0), (13, 13, 0, 0), (14, 14, 0, 0), (15, 15, 0, 0)]
+Expected (viet truoc tu so do cay): (do_rong = [1, 2, 4, 8], rong_nhat = 8, muc = 3, max_queue_len = 8)
+Actual: (do_rong = [1, 2, 4, 8], rong_nhat = 8, muc = 3, max_queue_len = 8)
+Ket qua: PASS
+
+T13 | goc=3 | nut=[(4, 7, 0, 0), (2, 7, 1, 4), (1, 7, 0, 0), (3, 9, 2, 0)]
+Expected (viet truoc tu so do cay): (thu_tu_id = [3, 2, 1, 4], cac_muc = [[9], [7], [7, 7]], do_rong = [1, 1, 2], rong_nhat = 2, muc = 2)
+Actual: (thu_tu_id = [3, 2, 1, 4], cac_muc = Vector{Any}[[9], [7], [7, 7]], do_rong = [1, 1, 2], rong_nhat = 2, muc = 2)
+Ket qua: PASS
+
+T11.5 | goc=1 | nut=[(1, 10, 2, 0), (2, 20, 1, 0)]
+Expected: ArgumentError - goc co cha, cay co chu trinh
+Actual: ArgumentError: Nut goc goc=1 khong duoc co nut cha (bac vao phai bang 0)
+Ket qua: PASS
+
+TONG KET BANG DOI CHIEU: 12/12 ca PASS; so phep kiem Test.jl ghi rieng trong runtests.jl.
+=== CHAY BANG LAN VET VA KHAO SAT 3 QUY MO ===
+========================================================================================================================
+BANG LAN VET TUNG BUOC THUAT TOAN DUYET CAY THEO MUC BANG HANG DOI (VI DU 1 - DE TAI DT084)
+Cay nhi phan: goc=1; nut=[(1,10,2,3), (2,20,4,0), (3,30,0,0), (4,40,0,0)]
+========================================================================================================================
+Buoc   | Nut lay (u) | Muc u  | Con them vao | dau    | cuoi   | Hang doi cho (FIFO)       | cac_muc tich luy     | do_rong     
+------------------------------------------------------------------------------------------------------------------------
+0 (Init) | -          | -      | Goc (1, M:0) | 1      | 1      | [(ID:1, M:0)]             | []                   | []          
+1      | ID:1 (gt:10) | 0      | T:2, P:3     | 2      | 3      | [ID:2, ID:3]              | [Any[10]]            | [1]         
+2      | ID:2 (gt:20) | 1      | T:4          | 3      | 4      | [ID:3, ID:4]              | [Any[10], Any[20]]   | [1, 1]      
+3      | ID:3 (gt:30) | 1      | Khong        | 4      | 4      | [ID:4]                    | [Any[10], Any[20, 30]] | [1, 2]      
+4      | ID:4 (gt:40) | 2      | Khong        | 5      | 4      | [Rong]                    | [Any[10], Any[20, 30], Any[40]] | [1, 2, 1]   
+========================================================================================================================
+Ket thuc: Hang doi rong (dau > cuoi). Tong so buoc lap = 4.
+Ket qua cuoi: cac_muc = Vector{Any}[[10], [20, 30], [40]]
+Do rong tung muc: [1, 2, 1]
+Do rong lon nhat: 2 tai Muc: 1
+========================================================================================================================
+
+========================================================================================================================
+KHAO SAT THUC NGHIEM 3 QUY MO N = 3, N = 7, N = 31 (SO SANH CAY LECH VS CAY NHI PHAN DAY)
+Phuong phap: dem so luot vao/ra queue va so nut dang cho lon nhat; khong do thoi gian.
+========================================================================================================================
+Cỡ N   | Dang cay         | Chieu cao | Vao Queue  | Ra Queue   | Queue Max (O)  | Rong nhat    | Muc rong nhat
+----------------------------------------------------------------------------------------------------
+3      | Day lech phai    | 2        | 3          | 3          | 1              | 1            | 0           
+3      | Nhi phan day     | 1        | 3          | 3          | 2              | 2            | 1           
+----------------------------------------------------------------------------------------------------
+7      | Day lech phai    | 6        | 7          | 7          | 1              | 1            | 0           
+7      | Nhi phan day     | 2        | 7          | 7          | 4              | 4            | 2           
+----------------------------------------------------------------------------------------------------
+31     | Day lech phai    | 30       | 31         | 31         | 1              | 1            | 0           
+31     | Nhi phan day     | 4        | 31         | 31         | 16             | 16           | 4           
+----------------------------------------------------------------------------------------------------
+NHAN XET KHAO SAT QUY MO:
+1. Tong so luot vao va ra queue = 2*n. Ket hop phan tich moi buoc O(1), loi duyet ton O(n).
+2. Dung luong queue cuc dai:
+   - Cay lech: chi 1 nut dang cho. Mang queue trong code van cap phat n o, khong phai bo nho O(1).
+   - Cac cay day trong bang: queue max=ceil(n/2) (n=31: 16 nut). Xau nhat O(n).
+3. max_queue_len la so nut dang cho, khac so o da cap phat; queue va nhom ket qua deu dung O(n) bo nho.
+========================================================================================================================
+
+=== HOAN THANH TOAN BO CAC BUOC KIEM CHUNG! ===

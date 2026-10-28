@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT084 - Duyệt cây theo mức và xác định độ rộng từng mức</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.25);
+            --accent: #818cf8;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --node-default: #334155;
+            --node-active: #f59e0b;
+            --node-visited: #10b981;
+            --node-queued: #6366f1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.12) 0px, transparent 50%);
+        }
+
+        .header {
+            max-width: 1300px;
+            margin: 0 auto 24px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .student-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            font-size: 13px;
+            line-height: 1.5;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .student-badge strong {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 960px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .control-group {
+            margin-bottom: 14px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        select, input, textarea, button {
+            font-family: inherit;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text-main);
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        textarea {
+            font-family: 'JetBrains Mono', monospace;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        button.btn {
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px;
+            border-radius: 8px;
+            transition: transform 0.1s, filter 0.2s;
+        }
+
+        button.btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, #4f46e5, #818cf8);
+            color: white;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 7px 4px;
+            font-size: 12px;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-chip {
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--primary);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto;
+            transition: all 0.15s;
+        }
+
+        .btn-chip:hover {
+            background: rgba(56, 189, 248, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .canvas-card {
+            min-height: 440px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        svg#tree-svg {
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+        }
+
+        .queue-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 12px;
+            overflow-x: auto;
+            min-height: 64px;
+        }
+
+        .queue-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .queue-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #312e81;
+            border: 1px solid #6366f1;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            animation: fadeIn 0.3s ease-out;
+            white-space: nowrap;
+        }
+
+        .queue-item.head {
+            background: #b45309;
+            border-color: #f59e0b;
+        }
+
+        .queue-item-level {
+            font-size: 10px;
+            color: #c7d2fe;
+            margin-top: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .stat-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-name {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .level-table-container {
+            overflow-x: auto;
+        }
+
+        table.custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        table.custom-table th, table.custom-table td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.custom-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(15, 23, 42, 0.4);
+        }
+
+        tr.highlight-max {
+            background: rgba(245, 158, 11, 0.15);
+            font-weight: 600;
+            color: #fbbf24;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-title">
+            <h1>Giao Diện Mô Phỏng Cây Nhị Phân — Đề Tài DT084</h1>
+            <p>Duyệt cây theo mức và xác định độ rộng từng mức bằng Hàng đợi FIFO (Học phần INT13185 — Nhóm 03)</p>
+        </div>
+        <div class="student-badge">
+            <div>Sinh viên: <strong>Lương Minh Trực</strong> (MSSV: <strong>N24DCDT100</strong>)</div>
+            <div>Lớp: <strong>D24CQDT01-N</strong> | GVHD: <strong>Hồ Nhựt Minh</strong></div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- SIDEBAR CONTROLS -->
+        <aside class="sidebar">
+            <div class="card">
+                <div class="card-header">
+                    <span>⚡</span> Dữ liệu & Nhập liệu cây
+                </div>
+
+                <!-- Tabs navigation -->
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="tab-samples">Ca mẫu</button>
+                    <button class="tab-btn" data-tab="tab-numbers">Dãy số</button>
+                    <button class="tab-btn" data-tab="tab-custom">Tùy chỉnh</button>
+                </div>
+
+                <!-- TAB 1: SAMPLES -->
+                <div class="tab-pane active" id="tab-samples">
+                    <div class="control-group">
+                        <label for="sample-select">Chọn ca mẫu có sẵn:</label>
+                        <select id="sample-select">
+                            <option value="1">Ví dụ 1 trên phiếu (4 nút, mức 1 rộng = 2)</option>
+                            <option value="2">Ví dụ 2 trên phiếu (1 nút gốc duy nhất)</option>
+                            <option value="3">Ca 3: Cây đầy đủ 7 nút (độ rộng [1, 2, 4])</option>
+                            <option value="4">Ca 4: Hòa độ rộng (Mức 1 & 2 cùng rộng 2)</option>
+                            <option value="5">Ca 5: Cây rỗng (n=0, gốc=0)</option>
+                            <option value="6">Ca 6: Cây lệch phải (dây xích 4 nút)</option>
+                            <option value="7">Ca 7: Gốc có 2 lá (3 nút)</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" id="btn-copy-to-edit" style="margin-top: 4px; font-size: 12px;">
+                        📋 Tải mẫu này vào ô Chỉnh sửa
+                    </button>
+                </div>
+
+                <!-- TAB 2: NUMBERS ARRAY -->
+                <div class="tab-pane" id="tab-numbers" style="display: none;">
+                    <div class="control-group">
+                        <label for="numbers-input">Nhập dãy số tùy ý (cách nhau bởi dấu phẩy hoặc cách):</label>
+                        <input type="text" id="numbers-input" value="10, 20, 30, 40, 50, 60, 70" placeholder="VD: 15, 25, 35, 45, 55">
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Chọn nhanh hoặc thử số ngẫu nhiên:</div>
+                    <div style="display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;">
+                        <button class="btn-chip" data-preset="10, 20, 30, 40">Mẫu 1</button>
+                        <button class="btn-chip" data-preset="8">Mẫu 2</button>
+                        <button class="btn-chip" data-preset="1, 2, 3, 4, 5, 6, 7">7 nút</button>
+                        <button class="btn-chip" data-preset="15, 25, 35, 45, 55">5 nút</button>
+                        <button class="btn-chip" id="btn-random-numbers">🎲 Số ngẫu nhiên</button>
+                    </div>
+                    <button class="btn btn-primary" id="btn-build-from-numbers">
+                        🚀 Sinh cây từ dãy số này
+                    </button>
+                </div>
+
+                <!-- TAB 3: CUSTOM & ADD NODE -->
+                <div class="tab-pane" id="tab-custom" style="display: none;">
+                    <!-- Quick add node -->
+                    <div style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 12px;">
+                        <div style="font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 8px;">➕ Thêm nhanh 1 nút vào cây:</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Giá trị nút:</label>
+                                <input type="text" id="new-node-val" placeholder="VD: 99">
+                            </div>
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Gắn vào cha:</label>
+                                <select id="parent-node-select"></select>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                            <div>
+                                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 4px;">Vị trí:</label>
+                                <select id="child-pos-select">
+                                    <option value="trai">Con Trái</option>
+                                    <option value="phai">Con Phải</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; align-items: flex-end;">
+                                <button class="btn btn-accent" id="btn-add-single-node" style="padding: 9px 6px; font-size: 12px; height: 38px;">
+                                    + Thêm vào cây
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Raw text input -->
+                    <div class="control-group">
+                        <label for="custom-input">Sửa trực tiếp các nút (bộ 4 ID, giá trị, con trái, con phải):</label>
+                        <textarea id="custom-input" style="height: 100px;" placeholder="goc: 1&#10;nut: (1, 10, 2, 0), (2, 20, 0, 0)&#10;Cây rỗng: goc: 0; nut: []"></textarea>
+                    </div>
+                    <button class="btn btn-secondary" id="btn-load-custom">
+                        Áp dụng cây vừa sửa
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>🎮</span> Điều khiển mô phỏng
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-primary" id="btn-step">▶ Từng bước</button>
+                    <button class="btn btn-accent" id="btn-auto">⚡ Tự động chạy</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-secondary" id="btn-reset">↺ Đặt lại</button>
+                    <button class="btn btn-secondary" id="btn-instant">⏩ Chạy ngay</button>
+                </div>
+                <div class="control-group" style="margin-top: 14px;">
+                    <label for="speed-slider">Tốc độ chạy tự động:</label>
+                    <input type="range" id="speed-slider" min="200" max="1500" value="700" step="100">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <span>📖</span> Hợp đồng đề tài DT084
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted); line-height: 1.6;">
+                    • <strong>Gốc:</strong> Mức 0.<br>
+                    • <strong>FIFO:</strong> Lấy cha trước các con ở mức kế tiếp; đưa con <strong>trái trước, phải sau</strong>.<br>
+                    • <strong>Độ rộng:</strong> Số nút tại mỗi mức.<br>
+                    • <strong>Quy tắc hòa:</strong> Khi nhiều mức có cùng độ rộng lớn nhất, <strong>chọn mức nhỏ nhất</strong>.<br>
+                    • <strong>Thời gian:</strong> $O(n)$ vì mỗi nút vào/ra queue đúng 1 lần.
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN DISPLAY -->
+        <main class="main-content">
+            <!-- CANVAS VISUALIZATION -->
+            <div class="card canvas-card">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div><span>🌳</span> Trực quan hóa Cây Nhị Phân & Hàng Đợi FIFO</div>
+                    <div class="legend">
+                        <div class="legend-item"><div class="legend-color" style="background: var(--node-default);"></div> Chưa duyệt</div>
+                        <div class="legend-item"><div class="legend-color" style="background: var(--node-queued);"></div> Trong Queue</div>
+                        <div class="legend-item"><div class="legend-color" style="background: var(--node-active);"></div> Đang xử lý</div>
+                        <div class="legend-item"><div class="legend-color" style="background: var(--node-visited);"></div> Đã hoàn tất</div>
+                    </div>
+                </div>
+
+                <!-- Tree SVG container -->
+                <div class="canvas-container">
+                    <svg id="tree-svg"></svg>
+                </div>
+
+                <!-- QUEUE DISPLAY -->
+                <div style="margin-top: 14px;">
+                    <div class="queue-display" id="queue-display">
+                        <span class="queue-label">Hàng đợi FIFO [Đầu ➔ Cuối]:</span>
+                        <span style="font-size: 13px; color: var(--text-muted); font-style: italic;" id="queue-empty-text">Hàng đợi rỗng</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-nodes">0</div>
+                    <div class="stat-name">Tổng số nút (n)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-max-w">0</div>
+                    <div class="stat-name">Độ rộng lớn nhất</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-level">-</div>
+                    <div class="stat-name">Mức rộng nhất (đầu tiên)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val" id="stat-max-q">0</div>
+                    <div class="stat-name">Dung lượng Queue cực đại</div>
+                </div>
+            </div>
+
+            <!-- LEVEL TABLE -->
+            <div class="card">
+                <div class="card-header">
+                    <span>📊</span> Bảng tổng hợp độ rộng theo từng mức (cac_muc)
+                </div>
+                <div class="level-table-container">
+                    <table class="custom-table" id="level-table">
+                        <thead>
+                            <tr>
+                                <th>Mức</th>
+                                <th>Danh sách giá trị nút</th>
+                                <th>Độ rộng (Số nút)</th>
+                                <th>Giá trị TB mức</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="level-table-body">
+                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Chưa có dữ liệu</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Data sets
+        const SAMPLES = {
+            1: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 10, trai: 2, phai: 3 },
+                    { id: 2, val: 20, trai: 4, phai: 0 },
+                    { id: 3, val: 30, trai: 0, phai: 0 },
+                    { id: 4, val: 40, trai: 0, phai: 0 }
+                ]
+            },
+            2: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 8, trai: 0, phai: 0 }
+                ]
+            },
+            3: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 1, trai: 2, phai: 3 },
+                    { id: 2, val: 2, trai: 4, phai: 5 },
+                    { id: 3, val: 3, trai: 6, phai: 7 },
+                    { id: 4, val: 4, trai: 0, phai: 0 },
+                    { id: 5, val: 5, trai: 0, phai: 0 },
+                    { id: 6, val: 6, trai: 0, phai: 0 },
+                    { id: 7, val: 7, trai: 0, phai: 0 }
+                ]
+            },
+            4: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 10, trai: 2, phai: 3 },
+                    { id: 2, val: 20, trai: 4, phai: 0 },
+                    { id: 3, val: 30, trai: 0, phai: 5 },
+                    { id: 4, val: 40, trai: 0, phai: 0 },
+                    { id: 5, val: 50, trai: 0, phai: 0 }
+                ]
+            },
+            5: {
+                goc: 0,
+                nut: []
+            },
+            6: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 10, trai: 0, phai: 2 },
+                    { id: 2, val: 20, trai: 0, phai: 3 },
+                    { id: 3, val: 30, trai: 0, phai: 4 },
+                    { id: 4, val: 40, trai: 0, phai: 0 }
+                ]
+            },
+            7: {
+                goc: 1,
+                nut: [
+                    { id: 1, val: 100, trai: 2, phai: 3 },
+                    { id: 2, val: 200, trai: 0, phai: 0 },
+                    { id: 3, val: 300, trai: 0, phai: 0 }
+                ]
+            }
+        };
+
+        let currentTree = SAMPLES[1];
+        let state = {
+            queue: [], // array of { id, level }
+            queueHead: 0,
+            cac_muc: [], // array of arrays of node values
+            activeNodeId: null,
+            visitedIds: new Set(),
+            queuedIds: new Set(),
+            isFinished: false,
+            stepIndex: 0,
+            maxQueueLen: 0,
+            timer: null
+        };
+
+        // Validate a copy before changing the displayed tree or running a traversal.
+        function validateTree(tree) {
+            if (!tree || typeof tree !== 'object' || !Array.isArray(tree.nut)) {
+                throw new Error('Cần một cây gồm goc và danh sách nut.');
+            }
+            const n = tree.nut.length;
+            if (n > 100) throw new Error('Số nút phải thuộc 0..100.');
+            if (!Number.isSafeInteger(tree.goc) ||
+                (n === 0 ? tree.goc !== 0 : tree.goc < 1 || tree.goc > n)) {
+                throw new Error(n === 0 ? 'Cây rỗng yêu cầu goc = 0.' : 'ID gốc phải thuộc 1..n.');
+            }
+            const ids = new Set();
+            const parents = Array(n + 1).fill(0);
+            const nut = tree.nut.map(item => {
+                if (!item || typeof item !== 'object') throw new Error('Mỗi nút phải có đủ id, val, trai, phai.');
+                const { id, trai, phai } = item;
+                const val = Object.prototype.hasOwnProperty.call(item, 'val') ? item.val : item.gia_tri;
+                if (!Number.isSafeInteger(id) || id < 1 || id > n || ids.has(id)) {
+                    throw new Error('ID phải phân biệt và bao phủ đúng 1..n.');
+                }
+                ids.add(id);
+                if (!(typeof val === 'string' || (typeof val === 'number' && Number.isFinite(val)))) {
+                    throw new Error(`Giá trị nút ${id} phải là số hữu hạn hoặc chuỗi.`);
+                }
+                for (const child of [trai, phai]) {
+                    if (!Number.isSafeInteger(child) || child < 0 || child > n) {
+                        throw new Error(`Chỉ số con của nút ${id} phải thuộc 0..n.`);
+                    }
+                    if (child === id) throw new Error(`Nút ${id} không được trỏ vào chính nó.`);
+                    if (child !== 0 && ++parents[child] > 1) {
+                        throw new Error(`Nút ${child} có nhiều hơn một liên kết cha.`);
+                    }
+                }
+                return { id, val, trai, phai };
+            });
+            if (n === 0) return { goc: 0, nut };
+            if (parents[tree.goc] !== 0) throw new Error('Gốc không được có cha; cây có thể có chu trình.');
+            const map = new Map(nut.map(node => [node.id, node]));
+            const seen = new Set([tree.goc]);
+            const queue = [tree.goc];
+            for (let head = 0; head < queue.length; head++) {
+                const node = map.get(queue[head]);
+                for (const child of [node.trai, node.phai]) {
+                    if (child === 0) continue;
+                    if (seen.has(child)) throw new Error('Cây không được có chu trình.');
+                    seen.add(child);
+                    queue.push(child);
+                }
+            }
+            if (seen.size !== n) throw new Error('Tất cả các nút phải tới được từ gốc; không được có nhánh rời.');
+            return { goc: tree.goc, nut };
+        }
+
+        function parseNodeValue(raw) {
+            const token = raw.trim();
+            if (!token) throw new Error('Giá trị nút không được để trống.');
+            if (token.startsWith('"')) {
+                const value = JSON.parse(token);
+                if (typeof value !== 'string') throw new Error('Chuỗi phải đặt trong dấu nháy kép.');
+                return value;
+            }
+            if (/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(token)) {
+                const value = Number(token);
+                if (!Number.isFinite(value)) throw new Error('Giá trị số phải hữu hạn.');
+                return value;
+            }
+            if (/^[+-]?(?:Infinity|NaN)$/i.test(token)) throw new Error('Giá trị số phải hữu hạn.');
+            return token;
+        }
+
+        function parseTreeInput(raw) {
+            const text = raw.trim();
+            if (!text) throw new Error('Vui lòng nhập goc và danh sách nut.');
+            if (text.startsWith('{')) return validateTree(JSON.parse(text));
+            const header = text.match(/^(?:goc|root)\s*[:=]\s*([+-]?\d+)\s*(?:;\s*)?(?:nut\s*[:=]\s*)?([\s\S]*)$/i);
+            if (!header) throw new Error('Định dạng: goc: 1; nut: (1, 10, 0, 0).');
+            const goc = Number(header[1]);
+            let body = header[2].trim();
+            if (body === '[]') return validateTree({ goc, nut: [] });
+            if (body.startsWith('[')) {
+                if (!body.endsWith(']')) throw new Error('Danh sách nút thiếu dấu ].');
+                body = body.slice(1, -1).trim();
+            }
+            if (!body) throw new Error('Cây rỗng phải ghi nut: [].');
+            const tuple = /\(\s*([+-]?\d+)\s*,\s*("(?:[^"\\]|\\.)*"|[^,()\[\]\r\n]+?)\s*,\s*([+-]?\d+)\s*,\s*([+-]?\d+)\s*\)/y;
+            const nut = [];
+            let offset = 0;
+            while (offset < body.length) {
+                tuple.lastIndex = offset;
+                const match = tuple.exec(body);
+                if (!match) throw new Error('Mỗi nút phải là bộ đủ bốn trường (id, giá trị, trái, phải); không bỏ qua phần sai.');
+                nut.push({ id: Number(match[1]), val: parseNodeValue(match[2]), trai: Number(match[3]), phai: Number(match[4]) });
+                offset = tuple.lastIndex;
+                if (offset === body.length) break;
+                const separator = body.slice(offset).match(/^(?:\s*[,;]\s*|\s+)/);
+                if (!separator) throw new Error('Các bộ nút phải ngăn bằng dấu phẩy hoặc xuống dòng.');
+                offset += separator[0].length;
+                if (offset === body.length) throw new Error('Không để dấu phân cách thừa sau nút cuối.');
+            }
+            return validateTree({ goc, nut });
+        }
+
+        function treeWithAddedNode(tree, value, parentId, position) {
+            const copy = validateTree(tree);
+            if (copy.nut.length >= 100) throw new Error('Cây đã có 100 nút, không thể thêm.');
+            if (copy.nut.length === 0) return validateTree({ goc: 1, nut: [{ id: 1, val: value, trai: 0, phai: 0 }] });
+            if (position !== 'trai' && position !== 'phai') throw new Error('Chọn vị trí con trái hoặc con phải.');
+            const parent = copy.nut.find(node => node.id === parentId);
+            if (!parent) throw new Error('Không tìm thấy nút cha.');
+            if (parent[position] !== 0) throw new Error('Vị trí này đã có nút con. Hãy chọn vị trí trống để giữ nguyên nhánh cũ.');
+            const id = copy.nut.length + 1;
+            parent[position] = id;
+            copy.nut.push({ id, val: value, trai: 0, phai: 0 });
+            return validateTree(copy);
+        }
+
+        function formatTreeToText(tree) {
+            if (!tree || tree.goc === 0 || !tree.nut || tree.nut.length === 0) {
+                return 'goc: 0\nnut: []';
+            }
+            let lines = [`goc: ${tree.goc}`, 'nut:'];
+            tree.nut.forEach(n => {
+                lines.push(`  (${n.id}, ${JSON.stringify(n.val)}, ${n.trai}, ${n.phai})`);
+            });
+            return lines.join('\n');
+        }
+
+        function updateParentSelect() {
+            const sel = document.getElementById('parent-node-select');
+            if (!sel) return;
+            sel.innerHTML = '';
+            if (!currentTree || !currentTree.nut || currentTree.nut.length === 0) {
+                const opt = document.createElement('option');
+                opt.value = '0';
+                opt.textContent = '(Cây rỗng - tạo gốc)';
+                sel.appendChild(opt);
+                return;
+            }
+            currentTree.nut.forEach(n => {
+                const opt = document.createElement('option');
+                opt.value = n.id;
+                opt.textContent = `ID ${n.id} (giá trị: ${n.val})`;
+                sel.appendChild(opt);
+            });
+        }
+
+        function initSimulation(treeData) {
+            const checkedTree = validateTree(treeData);
+            if (state.timer) {
+                clearInterval(state.timer);
+                state.timer = null;
+                document.getElementById('btn-auto').textContent = '⚡ Tự động chạy';
+            }
+
+            currentTree = checkedTree;
+            state = {
+                queue: checkedTree.goc > 0 ? [{ id: checkedTree.goc, level: 0 }] : [],
+                queueHead: 0,
+                cac_muc: [],
+                activeNodeId: null,
+                visitedIds: new Set(),
+                queuedIds: new Set(checkedTree.goc > 0 ? [checkedTree.goc] : []),
+                isFinished: checkedTree.goc === 0,
+                stepIndex: 0,
+                maxQueueLen: checkedTree.goc > 0 ? 1 : 0,
+                timer: null
+            };
+
+            renderTree();
+            updateUI();
+            updateParentSelect();
+        }
+
+        // Tree coordinate calculation
+        function getTreeLayout() {
+            const nodeMap = new Map();
+            currentTree.nut.forEach(n => nodeMap.set(n.id, n));
+
+            const positions = new Map();
+            if (currentTree.goc === 0 || !nodeMap.has(currentTree.goc)) {
+                return { positions, nodeMap, maxDepth: 0 };
+            }
+
+            // Assign in-order X coordinates and depth Y coordinates
+            let curX = 0;
+            let maxDepth = 0;
+
+            function computeInOrder(nodeId, depth) {
+                if (!nodeId || !nodeMap.has(nodeId)) return;
+                const node = nodeMap.get(nodeId);
+                if (depth > maxDepth) maxDepth = depth;
+
+                computeInOrder(node.trai, depth + 1);
+                positions.set(nodeId, { xIndex: curX++, depth: depth, node: node });
+                computeInOrder(node.phai, depth + 1);
+            }
+
+            computeInOrder(currentTree.goc, 0);
+            return { positions, nodeMap, maxDepth, totalNodes: curX };
+        }
+
+        function renderTree() {
+            const svg = document.getElementById('tree-svg');
+            svg.innerHTML = '';
+
+            if (currentTree.goc === 0) {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', '50%');
+                text.setAttribute('y', '50%');
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('fill', '#94a3b8');
+                text.setAttribute('font-size', '16');
+                text.textContent = 'Cây rỗng (n=0, gốc=0)';
+                svg.appendChild(text);
+                return;
+            }
+
+            const { positions, nodeMap, maxDepth, totalNodes } = getTreeLayout();
+            const width = svg.clientWidth || 800;
+            const height = svg.clientHeight || 400;
+
+            const paddingX = 60;
+            const paddingY = 60;
+            const usableWidth = width - 2 * paddingX;
+            const usableHeight = height - 2 * paddingY;
+
+            const stepX = totalNodes > 1 ? usableWidth / (totalNodes - 1) : usableWidth / 2;
+            const stepY = maxDepth > 0 ? usableHeight / maxDepth : 0;
+
+            const coords = new Map();
+            positions.forEach((pos, id) => {
+                const cx = totalNodes === 1 ? width / 2 : paddingX + pos.xIndex * stepX;
+                const cy = paddingY + pos.depth * (maxDepth > 0 ? stepY : 0);
+                coords.set(id, { cx, cy, node: pos.node, depth: pos.depth });
+            });
+
+            // Draw level horizontal lines & indicators
+            for (let d = 0; d <= maxDepth; d++) {
+                const ly = paddingY + d * stepY;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', '10');
+                line.setAttribute('y1', ly);
+                line.setAttribute('x2', width - 10);
+                line.setAttribute('y2', ly);
+                line.setAttribute('stroke', 'rgba(255,255,255,0.04)');
+                line.setAttribute('stroke-dasharray', '4 4');
+                svg.appendChild(line);
+
+                const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                label.setAttribute('x', '16');
+                label.setAttribute('y', ly - 8);
+                label.setAttribute('fill', '#64748b');
+                label.setAttribute('font-size', '11');
+                label.setAttribute('font-weight', '600');
+                label.textContent = `Mức ${d}`;
+                svg.appendChild(label);
+            }
+
+            // Draw edges
+            coords.forEach((coord, id) => {
+                const node = coord.node;
+                [node.trai, node.phai].forEach((childId, idx) => {
+                    if (childId !== 0 && coords.has(childId)) {
+                        const childCoord = coords.get(childId);
+                        const edge = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        edge.setAttribute('x1', coord.cx);
+                        edge.setAttribute('y1', coord.cy);
+                        edge.setAttribute('x2', childCoord.cx);
+                        edge.setAttribute('y2', childCoord.cy);
+                        edge.setAttribute('stroke', 'rgba(255,255,255,0.2)');
+                        edge.setAttribute('stroke-width', '2');
+                        svg.appendChild(edge);
+                    }
+                });
+            });
+
+            // Draw nodes
+            coords.forEach((coord, id) => {
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                
+                let fillColor = '#334155';
+                let strokeColor = '#475569';
+                let strokeWidth = '2';
+
+                if (state.activeNodeId === id) {
+                    fillColor = '#f59e0b';
+                    strokeColor = '#fbbf24';
+                    strokeWidth = '4';
+                } else if (state.visitedIds.has(id)) {
+                    fillColor = '#10b981';
+                    strokeColor = '#34d399';
+                } else if (state.queuedIds.has(id)) {
+                    fillColor = '#4f46e5';
+                    strokeColor = '#818cf8';
+                }
+
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', coord.cx);
+                circle.setAttribute('cy', coord.cy);
+                circle.setAttribute('r', '22');
+                circle.setAttribute('fill', fillColor);
+                circle.setAttribute('stroke', strokeColor);
+                circle.setAttribute('stroke-width', strokeWidth);
+                g.appendChild(circle);
+
+                const textVal = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textVal.setAttribute('x', coord.cx);
+                textVal.setAttribute('y', coord.cy + 5);
+                textVal.setAttribute('text-anchor', 'middle');
+                textVal.setAttribute('fill', 'white');
+                textVal.setAttribute('font-size', '13');
+                textVal.setAttribute('font-weight', '700');
+                textVal.textContent = coord.node.val;
+                g.appendChild(textVal);
+
+                const textId = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textId.setAttribute('x', coord.cx);
+                textId.setAttribute('y', coord.cy - 26);
+                textId.setAttribute('text-anchor', 'middle');
+                textId.setAttribute('fill', '#94a3b8');
+                textId.setAttribute('font-size', '10');
+                textId.textContent = `ID:${id}`;
+                g.appendChild(textId);
+
+                svg.appendChild(g);
+            });
+        }
+
+        function stepSimulation() {
+            if (state.isFinished) return;
+
+            if (state.queueHead >= state.queue.length) {
+                state.isFinished = true;
+                state.activeNodeId = null;
+                renderTree();
+                updateUI();
+                return;
+            }
+
+            // Dequeue node
+            const item = state.queue[state.queueHead++];
+            state.activeNodeId = item.id;
+            state.visitedIds.add(item.id);
+
+            const nodeMap = new Map();
+            currentTree.nut.forEach(n => nodeMap.set(n.id, n));
+            const node = nodeMap.get(item.id);
+
+            // Add value to cac_muc
+            while (state.cac_muc.length <= item.level) {
+                state.cac_muc.push([]);
+            }
+            state.cac_muc[item.level].push(node.val);
+
+            // Enqueue left first, then right
+            if (node.trai !== 0 && nodeMap.has(node.trai)) {
+                state.queue.push({ id: node.trai, level: item.level + 1 });
+                state.queuedIds.add(node.trai);
+            }
+            if (node.phai !== 0 && nodeMap.has(node.phai)) {
+                state.queue.push({ id: node.phai, level: item.level + 1 });
+                state.queuedIds.add(node.phai);
+            }
+
+            const waitingCount = state.queue.length - state.queueHead;
+            if (waitingCount > state.maxQueueLen) {
+                state.maxQueueLen = waitingCount;
+            }
+
+            if (waitingCount === 0) {
+                state.isFinished = true;
+            }
+
+            renderTree();
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update queue display
+            const qDiv = document.getElementById('queue-display');
+            const emptyText = document.getElementById('queue-empty-text');
+
+            // Remove previous items
+            const oldItems = qDiv.querySelectorAll('.queue-item');
+            oldItems.forEach(el => el.remove());
+
+            if (state.queueHead >= state.queue.length) {
+                emptyText.style.display = 'inline';
+            } else {
+                emptyText.style.display = 'none';
+                state.queue.slice(state.queueHead).forEach((item, idx) => {
+                    const el = document.createElement('div');
+                    el.className = 'queue-item' + (idx === 0 ? ' head' : '');
+                    
+                    const nodeMap = new Map();
+                    currentTree.nut.forEach(n => nodeMap.set(n.id, n));
+                    const node = nodeMap.get(item.id);
+
+                    const valueSpan = document.createElement('span');
+                    valueSpan.textContent = `ID:${item.id} (${node.val})`;
+                    const levelSpan = document.createElement('span');
+                    levelSpan.className = 'queue-item-level';
+                    levelSpan.textContent = `Mức ${item.level}`;
+                    el.appendChild(valueSpan);
+                    el.appendChild(levelSpan);
+                    qDiv.appendChild(el);
+                });
+            }
+
+            // Stats
+            document.getElementById('stat-nodes').textContent = currentTree.nut.length;
+            document.getElementById('stat-max-q').textContent = state.maxQueueLen;
+
+            // Widths
+            const doRong = state.cac_muc.map(m => m.length);
+            let maxW = 0;
+            let bestLevel = '-';
+
+            if (doRong.length > 0) {
+                maxW = Math.max(...doRong);
+                const firstIdx = doRong.indexOf(maxW);
+                bestLevel = firstIdx; // 0-indexed
+            }
+
+            document.getElementById('stat-max-w').textContent = maxW;
+            document.getElementById('stat-level').textContent = bestLevel;
+
+            // Level table
+            const tbody = document.getElementById('level-table-body');
+            tbody.innerHTML = '';
+
+            if (state.cac_muc.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">${currentTree.goc === 0 ? 'Cây rỗng không có mức nào' : 'Chưa có mức nào hoàn tất'}</td></tr>`;
+            } else {
+                state.cac_muc.forEach((m, idx) => {
+                    const isMax = m.length === maxW && maxW > 0;
+                    const isFirstMax = idx === bestLevel;
+                    const avg = m.every(value => typeof value === 'number')
+                        ? m.reduce((sum, value) => sum + value / m.length, 0).toFixed(1)
+                        : 'Không áp dụng';
+
+                    const tr = document.createElement('tr');
+                    if (isFirstMax) tr.className = 'highlight-max';
+
+                    const cells = [`Mức ${idx}`, `[${m.join(', ')}]`, m.length, avg,
+                        isFirstMax ? '★ Rộng nhất (Chọn)' : (isMax ? 'Hòa độ rộng' : 'Bình thường')];
+                    cells.forEach(value => {
+                        const td = document.createElement('td');
+                        td.textContent = value;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                });
+            }
+        }
+
+        // Event listeners
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+                btn.classList.add('active');
+                const paneId = btn.getAttribute('data-tab');
+                const pane = document.getElementById(paneId);
+                if (pane) pane.style.display = 'block';
+            });
+        });
+
+        // Sample select
+        document.getElementById('sample-select').addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (SAMPLES[val]) {
+                initSimulation(SAMPLES[val]);
+                document.getElementById('custom-input').value = formatTreeToText(SAMPLES[val]);
+            }
+        });
+
+        document.getElementById('btn-copy-to-edit').addEventListener('click', () => {
+            document.getElementById('custom-input').value = formatTreeToText(currentTree);
+            const customTab = document.querySelector('.tab-btn[data-tab="tab-custom"]');
+            if (customTab) customTab.click();
+        });
+
+        // Build tree from numbers array
+        function buildTreeFromNumbers(numStr) {
+            try {
+                const rawItems = numStr.split(/[\s,]+/).map(s => s.trim()).filter(s => s.length > 0);
+                const n = rawItems.length;
+                if (n < 1 || n > 100) throw new Error('Nhập từ 1 đến 100 giá trị.');
+                const nut = rawItems.map((raw, index) => {
+                    const id = index + 1;
+                    return { id, val: parseNodeValue(raw), trai: 2 * id <= n ? 2 * id : 0,
+                        phai: 2 * id + 1 <= n ? 2 * id + 1 : 0 };
+                });
+                initSimulation({ goc: 1, nut });
+                document.getElementById('custom-input').value = formatTreeToText(currentTree);
+            } catch (err) {
+                alert('Không thể tạo cây: ' + err.message);
+            }
+        }
+
+        document.getElementById('btn-build-from-numbers').addEventListener('click', () => {
+            const str = document.getElementById('numbers-input').value.trim();
+            buildTreeFromNumbers(str);
+        });
+
+        document.querySelectorAll('.btn-chip[data-preset]').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const preset = chip.getAttribute('data-preset');
+                document.getElementById('numbers-input').value = preset;
+                buildTreeFromNumbers(preset);
+            });
+        });
+
+        document.getElementById('btn-random-numbers').addEventListener('click', () => {
+            const count = Math.floor(Math.random() * 4) + 4; // 4 to 7 nodes
+            const arr = [];
+            for (let i = 0; i < count; i++) {
+                arr.push(Math.floor(Math.random() * 90) + 10);
+            }
+            const numStr = arr.join(', ');
+            document.getElementById('numbers-input').value = numStr;
+            buildTreeFromNumbers(numStr);
+        });
+
+        // Add single node
+        document.getElementById('btn-add-single-node').addEventListener('click', () => {
+            try {
+                const val = parseNodeValue(document.getElementById('new-node-val').value);
+                const parentId = Number(document.getElementById('parent-node-select').value);
+                const pos = document.getElementById('child-pos-select').value;
+                const updatedTree = treeWithAddedNode(currentTree, val, parentId, pos);
+                initSimulation(updatedTree);
+                document.getElementById('custom-input').value = formatTreeToText(currentTree);
+                document.getElementById('new-node-val').value = '';
+            } catch (err) {
+                alert('Không thể thêm nút: ' + err.message);
+            }
+        });
+
+        // Load custom textarea input
+        document.getElementById('btn-load-custom').addEventListener('click', () => {
+            try {
+                const tree = parseTreeInput(document.getElementById('custom-input').value);
+                initSimulation(tree);
+                document.getElementById('custom-input').value = formatTreeToText(currentTree);
+            } catch (err) {
+                alert('Không thể nạp cây: ' + err.message + '\n\nĐịnh dạng mẫu:\ngoc: 1\nnut: (1, 10, 2, 3), (2, 20, 0, 0), (3, 30, 0, 0)\nCây rỗng: goc: 0; nut: []');
+            }
+        });
+
+        // Controls
+        document.getElementById('btn-step').addEventListener('click', () => {
+            stepSimulation();
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            initSimulation(currentTree);
+            document.getElementById('custom-input').value = formatTreeToText(currentTree);
+        });
+
+        document.getElementById('btn-instant').addEventListener('click', () => {
+            while (!state.isFinished) {
+                stepSimulation();
+            }
+        });
+
+        document.getElementById('btn-auto').addEventListener('click', () => {
+            const btn = document.getElementById('btn-auto');
+            if (state.timer) {
+                clearInterval(state.timer);
+                state.timer = null;
+                btn.textContent = '⚡ Tự động chạy';
+            } else {
+                if (state.isFinished) {
+                    initSimulation(currentTree);
+                }
+                const speed = 1700 - Number(document.getElementById('speed-slider').value);
+                btn.textContent = '⏸ Tạm dừng';
+                state.timer = setInterval(() => {
+                    if (state.isFinished) {
+                        clearInterval(state.timer);
+                        state.timer = null;
+                        btn.textContent = '⚡ Tự động chạy';
+                    } else {
+                        stepSimulation();
+                    }
+                }, speed);
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            renderTree();
+        });
+
+        // Initialize on load
+        initSimulation(SAMPLES[1]);
+        document.getElementById('custom-input').value = formatTreeToText(SAMPLES[1]);
+    </script>
+</body>
+</html>

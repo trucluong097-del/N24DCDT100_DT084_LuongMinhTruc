@@ -1,0 +1,18 @@
+*.jl.cov
+*.jl.mem
+.DS_Store
+Thumbs.db
+*.tmp
+~$*
+
+tmp/
+.julia/
+
+# Thong tin rieng va cache
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+.vscode/
+.idea/
