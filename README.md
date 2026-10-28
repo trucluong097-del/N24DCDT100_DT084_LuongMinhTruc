@@ -152,13 +152,11 @@ node test/gui_tests.cjs
 
 Repo GitHub thật: https://github.com/trucluong097-del/N24DCDT100_DT084_LuongMinhTruc
 
-Bản này dùng Julia; README, mã, test và log được đóng gói cùng nhau. Đã bổ sung đủ 11 ảnh cá nhân A01–A11 trong docs/anh_ket_qua. Báo cáo Word/PDF chưa có trong repo này. SHA C lấy từ commit chứa mã/test/input, SHA S chốt sau khi bổ sung minh chứng. Sau khi tự chạy lại:
+Bản nộp đã có báo cáo Word/PDF 60 trang theo mẫu môn học, đủ 11 ảnh cá nhân A01–A11 và phân tích. Hai tệp báo cáo mang tên `N24DCDT100_DT084_LuongMinhTruc_BaoCao.docx` và `N24DCDT100_DT084_LuongMinhTruc_BaoCao.pdf` nằm ở thư mục gốc của repo. ZIP mã nguồn chứa mã, test, README, log và ảnh gốc; báo cáo được nộp thành hai tệp riêng.
 
-1. Đưa mã/test/input lên repo cá nhân, chốt **C**; ghi URL, SHA C và permalink thuật toán/test trong báo cáo.
-2. Clone đúng C vào thư mục mới, kiểm HEAD và chạy lại để chụp A10. Tự chụp A01–A09 và A11 theo hướng dẫn lớp.
-3. Thêm ảnh/báo cáo, chốt **S**. Clone S sang thư mục mới, chạy hai ví dụ/test. Nếu mã/test/input khác C, cập nhật minh chứng bị ảnh hưởng.
-4. Ghi SHA S và kết quả chạy lại trong TXT nộp rời; không đưa SHA của chính S vào tệp thuộc S.
-5. ZIP mã giữ code/test/README/log/ảnh gốc; bỏ .git, cache, tệp tạm. Bộ nộp còn cần Word, PDF và TXT.
+Phiên bản mã/test/input dùng tạo kết quả và chụp ảnh là **C** ở mục 8. Sau khi bổ sung minh chứng và báo cáo, chốt **S**, clone S sang thư mục mới và chạy lại hai ví dụ cùng bộ test. SHA S và kết quả kiểm tra được ghi vào `N24DCDT100_DT084_LuongMinhTruc_ThongTinNop.txt` nộp rời, sau khi S đã được tạo; không đưa SHA của chính S vào tệp thuộc S.
+
+Bộ nộp gồm đúng bốn tệp: Word, PDF, ZIP mã nguồn và TXT thông tin nộp. Thời hạn và yêu cầu chữ ký thực hiện theo thông báo Classroom của giảng viên. Việc có đủ tệp không thay cho thao tác đính kèm và nộp bài trên Classroom.
 
 11 ảnh cá nhân đã lưu trong docs/anh_ket_qua; nhật ký là bằng chứng bổ sung. Ghi log mới bằng:
 
@@ -181,4 +179,4 @@ git rev-parse HEAD
 
 SHA C: `ccaf13ab5c6bca2a9affc669f42508e7d0f6848a`.
 
-Mã/test/input không đổi so với C; lần cập nhật này thêm 11 ảnh, danh mục phân tích và nhật ký clone C. Xem docs/anh_ket_qua/README.md. Nhật ký clone_C.log và clone_C_gui.log ghi kết quả chạy lại thật từ repo mới. SHA S lấy sau khi chốt phiên bản trên GitHub và ghi vào TXT nộp rời.
+Mã/test/input không đổi so với C; các lần cập nhật sau C bổ sung 11 ảnh, danh mục phân tích, nhật ký clone C và báo cáo Word/PDF; không sửa thuật toán, demo hoặc test. Xem docs/anh_ket_qua/README.md. Nhật ký clone_C.log và clone_C_gui.log ghi kết quả chạy lại thật từ repo mới. SHA S lấy sau khi chốt phiên bản trên GitHub và ghi vào TXT nộp rời.
